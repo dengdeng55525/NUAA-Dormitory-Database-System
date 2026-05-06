@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>学生自助信息</title>
+    <style>
+        body { font-family: "Microsoft YaHei", Arial, sans-serif; background: #f7f7f9; margin: 0; }
+        #current-student-bar-top {
+            width:100%;
+            background:#fff;
+            text-align:center;
+            color:#3865d1;
+            font-size:16px;
+            font-weight:bold;
+            padding:13px 0 9px 0;
+            box-shadow:0 2px 8px #eee;
+        }
+        .header { background: #3865d1; color: #fff; padding: 16px 30px; font-size: 22px; position:relative; }
+        .tabs { background: #fff; border-bottom: 1px solid #e5e5e5; padding: 0 30px; }
+        .tabs button { border: none; background: none; font-size: 16px; margin-right: 28px; padding: 16px 0; color: #666; cursor: pointer; }
+        .tabs .active { color: #3865d1; font-weight: bold; border-bottom: 2px solid #3865d1;}
+        .container { padding: 30px; max-width: 900px; margin: 0 auto; }
+        .section { display: none; }
+        .section.active { display: block; }
+        table { width: 100%; border-collapse: collapse; background: #fff; margin-bottom: 18px;}
+        th, td { padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 15px;}
+        th { background: #f1f4fa; color: #333; }
+        tr:last-child td { border-bottom: none; }
+        .logout-bar {
+            position: absolute;
+            top: 18px;
+            right: 36px;
+            z-index: 50;
+        }
+        #logout-btn {
+            padding:7px 20px;
+            font-size:14px;
+            background:#fff;
+            color:#3865d1;
+            border:1px solid #3865d1;
+            border-radius:5px;
+            cursor:pointer;
+        }
+        /* 密码修改弹窗样式 */
+        #stu-pw-modal-bg { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.23); z-index:1500;}
+        #stu-pw-modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; min-width:320px; padding:35px 35px 25px 35px; border-radius:8px; box-shadow:0 4px 20px #333; z-index:1600;}
+        #stu-pw-modal-title { font-size:18px; margin-bottom:20px;}
+        #stu-pw-modal label { display:block; margin:8px 0 2px 0;}
+        #stu-pw-modal input { width:98%; padding:8px 6px; margin-bottom:12px; border:1px solid #d3d3d3; border-radius:4px;}
+        #stu-pw-modal .msg { color:#e74c3c; height:20px; margin-bottom:10px;}
+        #stu-pw-modal .pw-ok { color:#27ae60; }
+        #close-stu-pw-modal {
+            position:absolute;
+            right:13px;
+            top:10px;
+            font-size:22px;
+            background:transparent;
+            border:none;
+            cursor:pointer;
+            color:#888;
+        }
+        #stu-change-pw-btn {
+            margin-bottom: 20px;
+            padding:7px 18px;
+            font-size:14px;
+            background:#fff;
+            color:#3865d1;
+            border:1px solid #3865d1;
+            border-radius:5px;
+            cursor:pointer;
+        }
+        @media (max-width: 800px) {
+            .container { padding:10px; }
+            #current-student-bar-top { font-size:14px; }
+            #stu-pw-modal { min-width: 80vw; }
+        }
+    </style>
+</head>
+<body>
+    <div id="current-student-bar-top"></div>
+    <div class="header" style="position:relative;">
+        学生自助信息
+        <div class="logout-bar">
+            <button id="logout-btn">退出登录</button>
+        </div>
+    </div>
+    <div class="tabs">
+        <button id="tab-info" class="active">个人信息</button>
+        <button id="tab-award">本宿舍奖项</button>
+        <button id="tab-check">本宿舍检查</button>
+        <button id="tab-visitor">我的访客记录</button>
+        <button id="tab-admin">管理员情况</button>
+    </div>
+    <div class="container">
+        <!-- 个人信息 -->
+        <div class="section active" id="section-info">
+            <button id="stu-change-pw-btn">修改密码</button>
+            <table>
+                <tbody id="info-tbody"></tbody>
+            </table>
+        </div>
+        <!-- 奖项 -->
+        <div class="section" id="section-award">
+            <table>
+                <thead>
+                    <tr>
+                        <th>宿舍</th><th>奖项类型</th><th>学期</th><th>理由</th><th>获奖时间</th>
+                    </tr>
+                </thead>
+                <tbody id="award-tbody"></tbody>
+            </table>
+        </div>
+        <!-- 检查 -->
+        <div class="section" id="section-check">
+            <table>
+                <thead>
+                    <tr>
+                        <th>宿舍</th><th>日期</th><th>检查人</th><th>分数</th><th>备注</th><th>整改</th>
+                    </tr>
+                </thead>
+                <tbody id="check-tbody"></tbody>
+            </table>
+        </div>
+        <!-- 访客 -->
+        <div class="section" id="section-visitor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>姓名</th><th>宿舍</th><th>来访</th><th>离开</th><th>事由</th>
+                    </tr>
+                </thead>
+                <tbody id="visitor-tbody"></tbody>
+            </table>
+        </div>
+        <!-- 管理员情况 -->
+        <div class="section" id="section-admin">
+            <table>
+                <thead>
+                    <tr>
+                        <th>楼栋</th><th>管理员姓名</th><th>管理员电话</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 密码修改弹窗 -->
+    <div id="stu-pw-modal-bg"></div>
+    <div id="stu-pw-modal">
+        <button id="close-stu-pw-modal" title="关闭">×</button>
+        <div id="stu-pw-modal-title">修改密码</div>
+        <form id="stu-pw-form">
+            <label for="stu-old-pw">原密码</label>
+            <input type="password" id="stu-old-pw" autocomplete="current-password">
+            <label for="stu-new-pw">新密码</label>
+            <input type="password" id="stu-new-pw" autocomplete="new-password">
+            <label for="stu-new-pw2">确认新密码</label>
+            <input type="password" id="stu-new-pw2" autocomplete="new-password">
+            <div class="msg" id="stu-pw-msg"></div>
+            <button type="submit" style="width:100%;background:#3865d1;color:#fff;font-size:16px;padding:8px 0;border:none;border-radius:5px;cursor:pointer;">提交修改</button>
+        </form>
+    </div>
+
+    <script>
+        // Tab切换
+        const tabs = [
+            {btn:'tab-info', section:'section-info', load:loadInfo},
+            {btn:'tab-award', section:'section-award', load:loadAwards},
+            {btn:'tab-check', section:'section-check', load:loadChecks},
+            {btn:'tab-visitor', section:'section-visitor', load:loadVisitors},
+            {btn:'tab-admin', section:'section-admin', load:loadAdminInfo},
+        ];
+        tabs.forEach((t, i) => {
+            document.getElementById(t.btn).onclick = () => {
+                tabs.forEach((tt, j) => {
+                    document.getElementById(tt.btn).classList.toggle('active', i===j);
+                    document.getElementById(tt.section).classList.toggle('active', i===j);
+                });
+                t.load();
+            }
+        });
+
+        // 个人信息
+        function loadInfo() {
+            fetch('/api/student/info').then(r=>r.json()).then(res=>{
+                let html = '';
+                if(res.success) {
+                    const s = res.data;
+                    html += `<tr><th>学号</th><td>${s.student_no}</td></tr>`;
+                    html += `<tr><th>姓名</th><td>${s.name}</td></tr>`;
+                    html += `<tr><th>性别</th><td>${s.gender==='M'?'男':'女'}</td></tr>`;
+                    html += `<tr><th>年级</th><td>${s.grade||''}</td></tr>`;
+                    html += `<tr><th>电话</th><td>${s.phone||''}</td></tr>`;
+                    html += `<tr><th>宿舍</th><td>${(s.dorm_building && s.dorm_room_number)?(s.dorm_building+'-'+s.dorm_room_number):''}</td></tr>`;
+                    html += `<tr><th>床号</th><td>${s.bed_number||''}</td></tr>`;
+                    html += `<tr><th>备注</th><td>${s.remark||''}</td></tr>`;
+                } else {
+                    html = `<tr><td colspan="2" style="color:#e74c3c">${res.message||'未登录'}</td></tr>`;
+                }
+                document.getElementById('info-tbody').innerHTML = html;
+            });
+        }
+
+        // 奖项
+        function loadAwards() {
+            fetch('/api/student/awards').then(r=>r.json()).then(res=>{
+                let html = '';
+                (res.data||[]).forEach(a=>{
+                    html += `<tr>
+                        <td>${(a.building && a.room_number) ? (a.building + '-' + a.room_number) : ''}</td>
+                        <td>${a.award_type}</td>
+                        <td>${a.term}</td>
+                        <td>${a.reason||''}</td>
+                        <td>${a.award_time||''}</td>
+                    </tr>`;
+                });
+                if(html==='') html = `<tr><td colspan="5" style="color:#888;">暂无奖项</td></tr>`;
+                document.getElementById('award-tbody').innerHTML = html;
+            });
+        }
+
+        // 检查
+        function loadChecks() {
+            fetch('/api/student/checks').then(r=>r.json()).then(res=>{
+                let html = '';
+                (res.data||[]).forEach(c=>{
+                    html += `<tr>
+                        <td>${(c.building && c.room_number) ? (c.building + '-' + c.room_number) : ''}</td>
+                        <td>${c.check_date||''}</td>
+                        <td>${c.checker||''}</td>
+                        <td>${c.score||''}</td>
+                        <td>${c.remarks||''}</td>
+                        <td>${c.score>85?'无需整改':(c.rectified?'已整改':'未整改')}</td>
+                    </tr>`;
+                });
+                if(html==='') html = `<tr><td colspan="6" style="color:#888;">暂无检查记录</td></tr>`;
+                document.getElementById('check-tbody').innerHTML = html;
+            });
+        }
+
+        // 访客
+        function loadVisitors() {
+            fetch('/api/student/visitors').then(r=>r.json()).then(res=>{
+                let html = '';
+                (res.data||[]).forEach(v=>{
+                    html += `<tr>
+                        <td>${v.name}</td>
+                        <td>${(v.building && v.room_number) ? (v.building + '-' + v.room_number) : ''}</td>
+                        <td>${v.visit_time||''}</td>
+                        <td>${v.leave_time||''}</td>
+                        <td>${v.purpose||''}</td>
+                    </tr>`;
+                });
+                if(html==='') html = `<tr><td colspan="5" style="color:#888;">暂无访客记录</td></tr>`;
+                document.getElementById('visitor-tbody').innerHTML = html;
+            });
+        }
+
+        // 管理员信息
+        function loadAdminInfo() {
+            fetch('/api/student/admin_info').then(r=>r.json()).then(res=>{
+                let html = '';
+                if(res.success && res.data && res.data.admins.length>0) {
+                    res.data.admins.forEach(a => {
+                        html += `<tr>
+                            <td>${res.data.building}</td>
+                            <td>${a.name}</td>
+                            <td>${a.phone}</td>
+                        </tr>`;
+                    });
+                } else {
+                    html = `<tr><td colspan="3" style="color:#888;">${res.message||'未找到相关管理员信息'}</td></tr>`;
+                }
+                document.getElementById('admin-tbody').innerHTML = html;
+            });
+        }
+
+        // 顶部学生欢迎信息
+        function showCurrentStudentInfo() {
+            fetch('/api/student/current').then(r=>r.json()).then(res=>{
+                let txt = '';
+                if(res.success) {
+                    txt = `欢迎你，${res.data.name}同学！宿舍：${res.data.dorm_building||''}${res.data.dorm_room_number||''}`;
+                }
+                document.getElementById('current-student-bar-top').textContent = txt;
+            });
+        }
+
+        // 退出登录
+        document.getElementById('logout-btn').onclick = function() {
+            fetch('/api/student/logout', {method:'POST'}).then(()=>location.href='/login.html');
+        };
+
+        // 密码修改弹窗逻辑
+        const stuPwModalBg = document.getElementById('stu-pw-modal-bg');
+        const stuPwModal = document.getElementById('stu-pw-modal');
+        document.getElementById('stu-change-pw-btn').onclick = function() {
+            stuPwModalBg.style.display = stuPwModal.style.display = "block";
+            document.getElementById('stu-old-pw').value = '';
+            document.getElementById('stu-new-pw').value = '';
+            document.getElementById('stu-new-pw2').value = '';
+            document.getElementById('stu-pw-msg').textContent = '';
+        };
+        stuPwModalBg.onclick = function() {
+            stuPwModalBg.style.display = stuPwModal.style.display = "none";
+        };
+        document.getElementById('close-stu-pw-modal').onclick = function() {
+            stuPwModalBg.style.display = stuPwModal.style.display = "none";
+        };
+        document.getElementById('stu-pw-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const oldpw = document.getElementById('stu-old-pw').value.trim();
+            const newpw = document.getElementById('stu-new-pw').value.trim();
+            const newpw2 = document.getElementById('stu-new-pw2').value.trim();
+            const msg = document.getElementById('stu-pw-msg');
+            msg.className = "msg";
+            if(!oldpw || !newpw || !newpw2) { msg.textContent = "请填写所有信息"; return; }
+            if(newpw !== newpw2) { msg.textContent = "两次新密码不一致"; return; }
+            msg.textContent = "正在提交...";
+            const res = await fetch('/api/student/change_password', {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({old_password:oldpw, new_password:newpw})
+            }).then(r=>r.json());
+            msg.textContent = res.message || (res.success ? "修改成功" : "修改失败");
+            msg.className = res.success ? "msg pw-ok" : "msg";
+            // 不自动关闭，需要用户手动点 × 或遮罩关闭弹窗
+        };
+
+        // 首次加载
+        showCurrentStudentInfo();
+        loadInfo();
+    </script>
+</body>
+</html>

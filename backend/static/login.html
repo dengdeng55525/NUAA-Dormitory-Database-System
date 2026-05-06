@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>宿舍管理系统登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/login.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', Arial, 'Microsoft YaHei', sans-serif;
+            background: url("/static/bg-login.jpg") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+        .login-header {
+            width: 100%;
+            text-align: center;
+            margin-top: 4vh;
+            margin-bottom: 16px;
+            color: #2252a6;
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px #fff, 0 1px 2px #e3e6ed;
+            line-height: 1.3;
+            user-select: none;
+        }
+        .login-container {
+            width: 340px;
+            margin: 0 auto 0 auto;
+            background: rgba(255,255,255,0.98);
+            border-radius: 12px;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.13), 0 1.5px 3px rgba(0,0,0,0.02);
+            padding: 36px 20px 55px 20px;
+            position: relative;
+        }
+        .login-title {
+            text-align: center;
+            font-size: 24px;
+            color: #2670a8;
+            margin-bottom: 28px;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-label {
+            display: block;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+        .form-input {
+            width: 97%;
+            box-sizing: border-box;
+            padding: 10px 10px;
+            border: 1px solid #d3d6de;
+            border-radius: 6px;
+            font-size: 15px;
+            background-color: #f8fafc;
+            transition: border 0.18s;
+            margin-right: 0;
+        }
+        .form-input:focus {
+            border-color: #2471A3;
+            background: #fff;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 11px 0;
+            background: linear-gradient(90deg, #2471A3 70%, #3998db 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 6px;
+            font-weight: bold;
+            box-shadow: 0 1.5px 6px rgba(36,113,163,0.06);
+            letter-spacing: 1px;
+            transition: background 0.18s;
+        }
+        .login-btn:hover {
+            background: linear-gradient(90deg, #145a89 75%, #2471A3 100%);
+        }
+        .switch-links {
+            position: absolute;
+            right: 16px;
+            bottom: 20px;
+            font-size: 13px;
+            color: #999;
+            text-align: right;
+            z-index: 5;
+        }
+        .switch-links a {
+            color: #2471A3;
+            margin-left: 10px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.16s;
+        }
+        .switch-links a:hover {
+            color: #145a89;
+            text-decoration: underline;
+        }
+        .msg {
+            text-align: center;
+            color: #e74c3c;
+            min-height: 18px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        @media (max-width: 500px) {
+            .login-header {
+                font-size: 19px;
+            }
+            .login-container { width: 98vw; min-width: 0; padding: 28px 4vw 55px 4vw; }
+            .form-input { width: 98%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-header">
+        <br>南京航空航天大学<br>宿舍管理系统<br><br>
+    </div>
+    <div class="login-container" id="admin-login">
+        <div class="login-title" id="login-title">管理员登录</div>
+        <div class="msg" id="msg"></div>
+        <form id="login-form" autocomplete="off">
+            <div class="form-group" id="admin-account-group">
+                <label class="form-label" for="admin-account">账号（手机号）</label>
+                <input class="form-input" type="text" id="admin-account" name="admin-account" placeholder="请输入管理员账号" autocomplete="username">
+            </div>
+            <div class="form-group" id="admin-password-group">
+                <label class="form-label" for="admin-password">密码</label>
+                <input class="form-input" type="password" id="admin-password" name="admin-password" placeholder="请输入密码" autocomplete="current-password">
+            </div>
+            <div class="form-group" id="student-id-group" style="display:none;">
+                <label class="form-label" for="student-id">学号</label>
+                <input class="form-input" type="text" id="student-id" name="student-id" placeholder="请输入学号" autocomplete="username">
+            </div>
+            <div class="form-group" id="student-password-group" style="display:none;">
+                <label class="form-label" for="student-password">密码</label>
+                <input class="form-input" type="password" id="student-password" name="student-password" placeholder="请输入密码" autocomplete="current-password">
+            </div>
+            <div id="visitor-fields" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label" for="visitor-name">姓名</label>
+                    <input class="form-input" type="text" id="visitor-name" name="visitor-name" placeholder="请输入您的姓名">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="visitor-phone">联系电话</label>
+                    <input class="form-input" type="text" id="visitor-phone" name="visitor-phone" placeholder="请输入联系电话">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="visitor-building">访问宿舍楼</label>
+                    <select class="form-input" id="visitor-building" name="visitor-building">
+                        <option value="">请选择</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                        <option value="H">H</option>
+                        <option value="I">I</option>
+                        <option value="J">J</option>
+                        <option value="K">K</option>
+                        <option value="L">L</option>
+                        <option value="M">M</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="visitor-room">访问房间号</label>
+                    <input class="form-input" type="text" id="visitor-room" name="visitor-room" placeholder="如A0101">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="visitor-student-no">被访学生学号（选填）</label>
+                    <input class="form-input" type="text" id="visitor-student-no" name="visitor-student-no" placeholder="如20230001">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="visitor-student-name">被访学生姓名（选填）</label>
+                    <input class="form-input" type="text" id="visitor-student-name" name="visitor-student-name" placeholder="如张三">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="visitor-visit-time">来访时间</label>
+                    <input class="form-input" type="datetime-local" id="visitor-visit-time" name="visitor-visit-time">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="visitor-leave-time">离开时间（选填）</label>
+                    <input class="form-input" type="datetime-local" id="visitor-leave-time" name="visitor-leave-time">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="visitor-purpose">来访事由</label>
+                    <input class="form-input" type="text" id="visitor-purpose" name="visitor-purpose" placeholder="请输入来访事由">
+                </div>
+            </div>
+            <button type="submit" class="login-btn" id="submit-btn">登录</button>
+        </form>
+        <div class="switch-links">
+            <a id="to-student" href="javascript:void(0);">学生登录</a>
+            <a id="to-visitor" href="javascript:void(0);">访客登记</a>
+            <a id="to-admin" href="javascript:void(0);" style="display:none;">返回管理员</a>
+        </div>
+    </div>
+<script>
+    // ...JS逻辑保持不变...
+    const msgDiv = document.getElementById('msg');
+    const loginTitle = document.getElementById('login-title');
+    const adminAccountGroup = document.getElementById('admin-account-group');
+    const adminPasswordGroup = document.getElementById('admin-password-group');
+    const studentIdGroup = document.getElementById('student-id-group');
+    const studentPasswordGroup = document.getElementById('student-password-group');
+    const visitorFields = document.getElementById('visitor-fields');
+    const submitBtn = document.getElementById('submit-btn');
+    let mode = 'admin';
+
+    function switchToAdmin() {
+        mode = 'admin';
+        loginTitle.textContent = "管理员登录";
+        adminAccountGroup.style.display = '';
+        adminPasswordGroup.style.display = '';
+        studentIdGroup.style.display = 'none';
+        studentPasswordGroup.style.display = 'none';
+        visitorFields.style.display = 'none';
+        submitBtn.textContent = "登录";
+        msgDiv.textContent = "";
+        msgDiv.style.color = "#e74c3c";
+        document.getElementById('to-admin').style.display = 'none';
+        document.getElementById('to-student').style.display = '';
+        document.getElementById('to-visitor').style.display = '';
+    }
+
+    function switchToStudent() {
+        mode = 'student';
+        loginTitle.textContent = "学生登录";
+        adminAccountGroup.style.display = 'none';
+        adminPasswordGroup.style.display = 'none';
+        studentIdGroup.style.display = '';
+        studentPasswordGroup.style.display = '';
+        visitorFields.style.display = 'none';
+        submitBtn.textContent = "登录";
+        msgDiv.textContent = "";
+        msgDiv.style.color = "#e74c3c";
+        document.getElementById('to-admin').style.display = '';
+        document.getElementById('to-student').style.display = 'none';
+        document.getElementById('to-visitor').style.display = '';
+    }
+
+    function switchToVisitor() {
+        mode = 'visitor';
+        loginTitle.textContent = "访客登记";
+        adminAccountGroup.style.display = 'none';
+        adminPasswordGroup.style.display = 'none';
+        studentIdGroup.style.display = 'none';
+        studentPasswordGroup.style.display = 'none';
+        visitorFields.style.display = '';
+        submitBtn.textContent = "登记";
+        msgDiv.textContent = "";
+        msgDiv.style.color = "#e74c3c";
+        document.getElementById('to-admin').style.display = '';
+        document.getElementById('to-student').style.display = '';
+        document.getElementById('to-visitor').style.display = 'none';
+    }
+
+    document.getElementById('to-student').onclick = switchToStudent;
+    document.getElementById('to-visitor').onclick = switchToVisitor;
+    document.getElementById('to-admin').onclick = switchToAdmin;
+
+    // 登录后自动跳转 admin_manager.html，如果已登录直接跳转
+    async function checkAdminLogin() {
+        try {
+            const res = await fetch('/api/admin/current_admin');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = '/admin_manager.html';
+                }
+            }
+        } catch (err) { /* 忽略 */ }
+    }
+    checkAdminLogin();
+
+    document.getElementById('login-form').onsubmit = async function(e) {
+        e.preventDefault();
+        msgDiv.textContent = "";
+        msgDiv.style.color = "#e74c3c";
+        if(mode === 'admin') {
+            const phone = document.getElementById('admin-account').value.trim();
+            const password = document.getElementById('admin-password').value.trim();
+            if(!phone || !password) {
+                msgDiv.textContent = "请输入账号和密码";
+                return;
+            }
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({phone, password})
+                });
+                const data = await res.json();
+                if(data.success) {
+                    window.location.href = '/admin_manager.html';
+                } else {
+                    msgDiv.textContent = data.message || "登录失败";
+                }
+            } catch (err) {
+                msgDiv.textContent = "登录请求失败，请检查网络或后端服务";
+            }
+        } else if(mode === 'student') {
+            const student_no = document.getElementById('student-id').value.trim();
+            const password = document.getElementById('student-password').value.trim();
+            if(!student_no || !password) {
+                msgDiv.textContent = "请输入学号和密码";
+                return;
+            }
+            try {
+                const res = await fetch('/api/student/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({student_no, password})
+                });
+                const data = await res.json();
+                if(data.success) {
+                    window.location.href = '/student_info.html';
+                } else {
+                    msgDiv.textContent = data.message || "登录失败";
+                }
+            } catch (err) {
+                msgDiv.textContent = "登录请求失败，请检查网络或后端服务";
+            }
+        } else if(mode === 'visitor') {
+            const name = document.getElementById('visitor-name').value.trim();
+            const phone = document.getElementById('visitor-phone').value.trim();
+            const building = document.getElementById('visitor-building').value;
+            const room_number = document.getElementById('visitor-room').value.trim();
+            const student_no = document.getElementById('visitor-student-no').value.trim();
+            const student_name = document.getElementById('visitor-student-name').value.trim();
+            const visit_time = document.getElementById('visitor-visit-time').value;
+            const leave_time = document.getElementById('visitor-leave-time').value;
+            const purpose = document.getElementById('visitor-purpose').value.trim();
+
+            if(!name || !phone || !building || !room_number || !visit_time || !purpose) {
+                msgDiv.textContent = "请填写完整访客信息（除被访学生、离开时间可选）";
+                return;
+            }
+            try {
+                const payload = {
+                    name, phone, building, room_number, student_no, student_name,
+                    visit_time, leave_time, purpose
+                };
+                const res = await fetch('/api/visitor/add', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if(data.success) {
+                    msgDiv.style.color = "#27ae60";
+                    msgDiv.textContent = "登记成功，欢迎来访！";
+                    setTimeout(() => {
+                        switchToAdmin();
+                        msgDiv.style.color = "#e74c3c";
+                    }, 1500);
+                } else {
+                    msgDiv.textContent = data.message || "登记失败";
+                }
+            } catch (err) {
+                msgDiv.textContent = "登记请求失败，请检查网络或后端服务";
+            }
+        }
+    };
+
+    switchToAdmin();
+</script>
+</body>
+</html>
