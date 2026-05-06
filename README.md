@@ -67,6 +67,6 @@ http://127.0.0.1:5000
 
 数据插入脚本使用 Faker 生成模拟姓名和手机号，用于课程设计的数据规模测试与功能演示，不包含真实业务数据。运行插入脚本前，应先确认本地数据库表结构已经创建完成，并检查数据量是否符合本机环境承载能力。
 
-## 许可证
+## License
 
-本仓库采用 MIT License 开源。
+This repository is licensed under the MIT License.
